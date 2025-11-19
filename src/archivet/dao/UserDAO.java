@@ -37,11 +37,13 @@ public class UserDAO implements IUserDAO {
         ON u.user_id = o.user_id
         LEFT JOIN vet_doctor as v
         ON u.user_id = v.user_id """;
-    
+
     private static final String FIND_BY_ID_FULL_SQL = FIND_USER_JOIN_QUERY + " WHERE u.user_id = ?";
+    
+    private static final String FIND_BY_EMAIL_FULL_SQL = FIND_USER_JOIN_QUERY + " WHERE u.email = ?";
 
     private static final String FIND_BY_CREDENTIALS_SQL = FIND_USER_JOIN_QUERY + """
-        WHERE u.email = ?
+         WHERE u.email = ?
         AND u.password_hash = ?
         AND u.is_active = TRUE; """;
 
@@ -133,7 +135,7 @@ public class UserDAO implements IUserDAO {
                 stmt.setString(1, user.getFirstName());
                 stmt.setString(2, user.getLastName());
                 stmt.setString(3, user.getEmail());
-                stmt.setString(4, user.getPlainPassword());
+                stmt.setString(4, user.getPasswordHash());
                 stmt.setString(5, user.getPhoneNumber());
                 stmt.setString(6, user.getSex().name());
                 stmt.setString(7, user.getRoleName());
@@ -195,32 +197,36 @@ public class UserDAO implements IUserDAO {
             conn = DBConnection.getConnection();
             conn.setAutoCommit(false);
             boolean success = false;
+            
+            String currentPasswordHash = user.getPasswordHash();
 
             // A. Actualizar la tabla USER (Datos Comunes)
             try (PreparedStatement stmt = conn.prepareStatement(UPDATE_USER_SQL)) {
-                stmt.setInt(1, user.getUserId());
-                stmt.setString(2, user.getFirstName());
-                stmt.setString(3, user.getLastName());
-                stmt.setString(4, user.getEmail());
-                stmt.setString(5, user.getPlainPassword());
-                stmt.setString(6, user.getPhoneNumber());
-                stmt.setString(7, user.getSex().name());
-                stmt.setBoolean(8, user.getIsActive());
+                stmt.setString(1, user.getFirstName());
+                stmt.setString(2, user.getLastName());
+                stmt.setString(3, user.getEmail());
+                stmt.setString(4, currentPasswordHash);
+                stmt.setString(5, user.getPhoneNumber());
+                stmt.setString(6, user.getSex().name());
+                stmt.setBoolean(7, user.getIsActive());
+                stmt.setInt(8, user.getUserId());
+
+                success = stmt.executeUpdate() > 0;
             }
 
             // B. Actualizar la tabla Específica (OWNER o VET_DOCTOR)
             if (user instanceof OwnerDTO owner) {
                 try (PreparedStatement stmt = conn.prepareStatement(UPDATE_OWNER_SQL)) {
-                    stmt.setInt(1, owner.getUserId());
-                    stmt.setString(2, owner.getBillingAddress());
+                    stmt.setString(1, owner.getBillingAddress());
+                    stmt.setInt(2, owner.getUserId());
                     stmt.executeUpdate();
                 }
             } else if (user instanceof VetDoctorDTO doctor) {
                 try (PreparedStatement stmt = conn.prepareStatement(UPDATE_VET_DOCTOR_SQL)) {
-                    stmt.setInt(1, doctor.getUserId());
-                    stmt.setString(2, doctor.getLicenseNumber());
-                    stmt.setString(3, doctor.getSpecialization());
-                    stmt.setString(4, doctor.getShiftSchedule());
+                    stmt.setString(1, doctor.getLicenseNumber());
+                    stmt.setString(2, doctor.getSpecialization());
+                    stmt.setString(3, doctor.getShiftSchedule());
+                    stmt.setInt(4, doctor.getUserId());
                     stmt.executeUpdate();
                 }
             }
@@ -313,6 +319,24 @@ public class UserDAO implements IUserDAO {
             }
         } catch (SQLException e) {
             System.err.println("Error al buscar usuario por ID: " + e.getMessage());
+            throw e;
+        }
+        return null;
+    }
+    
+    @Override
+    public UserDTO findByEmail(String email) throws SQLException {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(FIND_BY_EMAIL_FULL_SQL)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return buildUserDTO(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar usuario por email: " + e.getMessage());
             throw e;
         }
         return null;

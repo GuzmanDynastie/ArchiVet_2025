@@ -21,7 +21,7 @@ public class VetDoctorDTO extends UserDTO {
      * @param firstName
      * @param lastName
      * @param email
-     * @param passwordHash
+     * @param plainPassword
      * @param phoneNumber
      * @param sex
      */
@@ -42,13 +42,13 @@ public class VetDoctorDTO extends UserDTO {
      * @param firstName
      * @param lastName
      * @param email
-     * @param plainPassword
+     * @param passwordHash
      * @param phoneNumber
      * @param sex
      * @param isActive
      */
-    public VetDoctorDTO(String licenseNumber, String specialization, String shiftSchedule, int userId, String firstName, String lastName, String email, String plainPassword, String phoneNumber, SexEnum sex, boolean isActive) {
-        super(userId, firstName, lastName, email, plainPassword, phoneNumber, sex, isActive);
+    public VetDoctorDTO(String licenseNumber, String specialization, String shiftSchedule, int userId, String firstName, String lastName, String email, String passwordHash, String phoneNumber, SexEnum sex, boolean isActive) {
+        super(userId, firstName, lastName, email, passwordHash, phoneNumber, sex, isActive);
         this.licenseNumber = licenseNumber;
         this.specialization = specialization;
         this.shiftSchedule = shiftSchedule;

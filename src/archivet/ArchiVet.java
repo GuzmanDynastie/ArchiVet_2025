@@ -1,13 +1,9 @@
 package archivet;
 
 import archivet.config.DBConnection;
-import archivet.dao.UserDAO;
-import archivet.model.AppointmentDTO;
-import archivet.model.OwnerDTO;
+import archivet.controller.UserController;
 import archivet.model.UserDTO;
 import archivet.model.VetDoctorDTO;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 /**
  *
@@ -15,25 +11,14 @@ import java.time.LocalDateTime;
  */
 public class ArchiVet {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws SQLException {
-        DBConnection.getConnection();
-        AppointmentDTO appointment = new AppointmentDTO(1, 1, LocalDateTime.now(), "Se anda cagando el perro", AppointmentDTO.StatusEnum.SCHEDULED, "JAJAJA");
+    public static void main(String[] args) {
 
-        OwnerDTO userDTO = new OwnerDTO("Guadalajara, Jalisco.", "Emmanuel", "Guzman", "hola@universidad.com", "3344334433", UserDTO.SexEnum.MALE);
-        VetDoctorDTO vetDoctorDTO = new VetDoctorDTO("12345", "Mata perros", "7:00 - 13:00 Lunes a Viernes", "Mario", "Nieves", "mario@gmail.com", "HolaMundo", "3366633666", UserDTO.SexEnum.MALE);
-        UserDAO user = new UserDAO();
-        user.save(userDTO);
-        user.save(vetDoctorDTO);
-        
-        
-        System.out.println(user.findAllOwners());
-        System.out.println(user.findAllDoctors());
-        System.out.println(user.findById(2));
+        UserController user = new UserController();
+        VetDoctorDTO doctor = new VetDoctorDTO("123456", "Mata perros", "7:00 - 13:00 Lunes a Viernes", 2, "Mario Jesus Armando", "Solis Nieves", "mario@gmail.com", "MataPerros", "3366633666", UserDTO.SexEnum.MALE, true);
 
-        System.out.println(appointment);
+        System.out.println(user.handleUpdateUser(doctor));
+        System.out.println(user.handleGetUserById(2));
+        System.out.println(user.handleLogin("mario@gmail.com", "MarioGay"));
 
         DBConnection.closeConnection();
     }

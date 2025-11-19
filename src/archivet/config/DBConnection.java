@@ -20,13 +20,8 @@ public class DBConnection {
     // Objeto Connection estatico para mantener la unica conexion activa
     private static Connection connection = null;
 
-    /**
-     * Obtiene y retorna una unica instancia de la conexion a la bas de datos.
-     * Si la conexion no existe o esta cerrada, intenta establecer una nueva.
-     *
-     * @return Objeto conexion activo.
-     * @throws SQLException Si ocurre un error al conectar con la DB.
-     */
+     // Obtiene y retorna una unica instancia de la conexion a la bas de datos.
+     // Si la conexion no existe o esta cerrada, intenta establecer una nueva.
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
@@ -40,9 +35,7 @@ public class DBConnection {
         return connection;
     }
 
-    /**
-     * Cierra la conexion a la base de datos.
-     */
+    // Cierra la conexion a la base de datos.
     public static void closeConnection() {
         if (connection != null) {
             try {

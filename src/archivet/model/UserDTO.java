@@ -11,7 +11,7 @@ public abstract class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private String plainPassword;
+    private String passwordHash;
     private String phoneNumber;
     private SexEnum sex;
     private boolean isActive;
@@ -35,41 +35,25 @@ public abstract class UserDTO {
 
     /**
      * Constructor para generar un nuevo usuario
-     *
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param plainPassword
-     * @param phoneNumber
-     * @param sex
      */
-    public UserDTO(String firstName, String lastName, String email, String plainPassword, String phoneNumber, SexEnum sex) {
+    public UserDTO(String firstName, String lastName, String email, String passwordHash, String phoneNumber, SexEnum sex) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.plainPassword = plainPassword;
+        this.passwordHash = passwordHash;
         this.phoneNumber = phoneNumber;
         this.sex = sex;
     }
     
     /**
      * Constructor para obtener usuario de la base de datos
-     *
-     * @param userId
-     * @param firstName
-     * @param lastName
-     * @param email
-     * @param plainPassword
-     * @param phoneNumber
-     * @param sex
-     * @param isActive
      */
-    public UserDTO(int userId, String firstName, String lastName, String email, String plainPassword, String phoneNumber, SexEnum sex, boolean isActive) {
+    public UserDTO(int userId, String firstName, String lastName, String email, String passwordHash, String phoneNumber, SexEnum sex, boolean isActive) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.plainPassword = plainPassword;
+        this.passwordHash = passwordHash;
         this.phoneNumber = phoneNumber;
         this.sex = sex;
         this.isActive = isActive;
@@ -111,12 +95,12 @@ public abstract class UserDTO {
         this.email = email;
     }
 
-    public String getPlainPassword() {
-        return plainPassword;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPlainPassword(String plainPassword) {
-        this.plainPassword = plainPassword;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getPhoneNumber() {
@@ -152,9 +136,9 @@ public abstract class UserDTO {
         sb.append(", firstName=").append(firstName);
         sb.append(", lastName=").append(lastName);
         sb.append(", email=").append(email);
-        sb.append(", passwordHash=").append(plainPassword);
+        sb.append(", passwordHash=").append(passwordHash);
         sb.append(", phoneNumber=").append(phoneNumber);
-        sb.append(", sex=").append(sex);
+        sb.append(", sex=").append(sex.getDisplayValue());
         sb.append(", isActive=").append(isActive);
         return sb.toString();
     }
