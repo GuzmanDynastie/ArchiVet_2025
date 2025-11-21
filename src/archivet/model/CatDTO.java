@@ -14,15 +14,13 @@ public class CatDTO extends PetDTO {
      * @param name
      * @param coat_color
      * @param sex
-     * @param specieType
      * @param speciesType
-     * @param isStirilazed
+     * @param isSterilized
      * @param birthDate
      * @param ownerId
-     * @param is_active
      */
-    public CatDTO(String name, String coat_color, SexEnum sex, SpecieEnum specieType, String speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId, boolean is_active) {
-        super(name, coat_color, sex, specieType, speciesType, isStirilazed, birthDate, ownerId, is_active);
+    public CatDTO(String name, String coat_color, SexEnum sex, SpecieEnum speciesType, boolean isSterilized, LocalDate birthDate, int ownerId) {
+        super(name, coat_color, sex, speciesType, isSterilized, birthDate, ownerId);
     }
 
     /**
@@ -32,15 +30,14 @@ public class CatDTO extends PetDTO {
      * @param name
      * @param coat_color
      * @param sex
-     * @param specieType
      * @param speciesType
-     * @param isStirilazed
+     * @param isSterilized
      * @param birthDate
      * @param ownerId
-     * @param is_active
+     * @param isActive
      */
-    public CatDTO(int petId, String name, String coat_color, SexEnum sex, SpecieEnum specieType, String speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId, boolean is_active) {
-        super(petId, name, coat_color, sex, specieType, speciesType, isStirilazed, birthDate, ownerId, is_active);
+    public CatDTO(int petId, String name, String coat_color, SexEnum sex, SpecieEnum speciesType, boolean isSterilized, LocalDate birthDate, int ownerId, boolean isActive) {
+        super(petId, name, coat_color, sex, speciesType, isSterilized, birthDate, ownerId, isActive);
     }
 
     // Implementacion del metodo abstracto
@@ -50,4 +47,15 @@ public class CatDTO extends PetDTO {
     }
 
     // Getters y Setters
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CatDTO{");
+        sb.append(super.toString());
+        sb.append('}');
+        return sb.toString();
+    }
+    
+    
 }

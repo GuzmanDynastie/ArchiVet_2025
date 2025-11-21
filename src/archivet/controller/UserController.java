@@ -16,7 +16,7 @@ public class UserController {
 
     private final IUserService userService;
 
-    public UserController() {
+    public UserController(IUserService userService) {
         this.userService = new UserService();
     }
 
@@ -36,9 +36,9 @@ public class UserController {
     // ------------------------------------------------------------------
     // 2. REGISTRO Y ACTUALIZACIÓN
     // ------------------------------------------------------------------
-    public boolean handleDoctorRegistration(String firstName, String lastName, String email, String plainPassword, String phonenNumber, SexEnum sex, String license, String specialization, String shift) {
+    public boolean handleDoctorRegistration(String firstName, String lastName, String email, String plainPassword, String phoneNumber, SexEnum sex, String license, String specialization, String shift) {
         try {
-            VetDoctorDTO doctor = new VetDoctorDTO(license, specialization, shift, firstName, lastName, email, plainPassword, phonenNumber, sex);
+            VetDoctorDTO doctor = new VetDoctorDTO(license, specialization, shift, firstName, lastName, email, plainPassword, phoneNumber, sex);
 
             return userService.registerUser(doctor, plainPassword);
         } catch (Exception e) {

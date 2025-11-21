@@ -79,7 +79,7 @@ public class UserDAO implements IUserDAO {
         SET license_number=?, specialization=?, shift_schedule=? 
         WHERE user_id=?; """;
 
-    // --- Self Delete
+    // --- Soft Delete
     private static final String DEACTIVATE_USER_SQL = """
         UPDATE User 
         SET is_active = FALSE 
@@ -128,7 +128,7 @@ public class UserDAO implements IUserDAO {
         Connection conn = null;
         try {
             conn = DBConnection.getConnection();
-            conn.setAutoCommit(false); // 1. INICIA TRANSACCIÓN
+            conn.setAutoCommit(false); // 1. INICIA TRANSACCION
 
             // A. Insertar en la tabla USER y obtener ID
             try (PreparedStatement stmt = conn.prepareStatement(INSERT_USER_SQL, Statement.RETURN_GENERATED_KEYS)) {
@@ -153,7 +153,7 @@ public class UserDAO implements IUserDAO {
                 }
             }
 
-            // B. Insertar en la tabla específica (OWNER o VET_DOCTOR)
+            // B. Insertar en la tabla especifica (OWNER o VET_DOCTOR)
             if (user instanceof OwnerDTO owner) {
                 try (PreparedStatement stmt = conn.prepareStatement(INSERT_OWNER_SQL)) {
                     stmt.setInt(1, owner.getUserId());
@@ -170,7 +170,7 @@ public class UserDAO implements IUserDAO {
                 }
             }
 
-            conn.commit(); // 2. CONFIRMA LA TRANSACCIÓN
+            conn.commit(); // 2. CONFIRMA LA TRANSACCION
             return true;
 
         } catch (SQLException e) {
@@ -245,7 +245,6 @@ public class UserDAO implements IUserDAO {
                 conn.setAutoCommit(true);
             }
         }
-
     }
 
     // ------------------------------------------------------------------
@@ -271,7 +270,6 @@ public class UserDAO implements IUserDAO {
         List<VetDoctorDTO> doctors = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(FIND_ALL_DOCTORS_QUERY); ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
                 UserDTO user = buildUserDTO(rs);
 
@@ -291,7 +289,6 @@ public class UserDAO implements IUserDAO {
         List<OwnerDTO> owners = new ArrayList<>();
 
         try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(FIND_ALL_OWNERS_QUERY); ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
                 UserDTO user = buildUserDTO(rs);
 

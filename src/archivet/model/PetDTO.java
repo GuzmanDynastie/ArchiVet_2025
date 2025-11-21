@@ -11,14 +11,13 @@ public abstract class PetDTO {
 
     private int petId;
     private String name;
-    private String coat_color;
+    private String coatColor;
     private SexEnum sex;
-    private SpecieEnum specieType;
-    private String speciesType;
-    private boolean isStirilazed;
+    private SpecieEnum speciesType;
+    private boolean isSterilized;
     private LocalDate birthDate;
     private int ownerId;
-    private boolean is_active;
+    private boolean isActive;
 
     public enum SexEnum {
         MALE("Macho"),
@@ -59,25 +58,21 @@ public abstract class PetDTO {
      * Constructor para generar una nueva mascota
      *
      * @param name
-     * @param coat_color
+     * @param coatColor
      * @param sex
-     * @param specieType
      * @param speciesType
-     * @param isStirilazed
+     * @param isSterilized
      * @param birthDate
      * @param ownerId
-     * @param is_active
      */
-    public PetDTO(String name, String coat_color, SexEnum sex, SpecieEnum specieType, String speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId, boolean is_active) {
+    public PetDTO(String name, String coatColor, SexEnum sex, SpecieEnum speciesType, boolean isSterilized, LocalDate birthDate, int ownerId) {
         this.name = name;
-        this.coat_color = coat_color;
+        this.coatColor = coatColor;
         this.sex = sex;
-        this.specieType = specieType;
         this.speciesType = speciesType;
-        this.isStirilazed = isStirilazed;
+        this.isSterilized = isSterilized;
         this.birthDate = birthDate;
         this.ownerId = ownerId;
-        this.is_active = is_active;
     }
 
     /**
@@ -85,26 +80,24 @@ public abstract class PetDTO {
      *
      * @param petId
      * @param name
-     * @param coat_color
+     * @param coatColor
      * @param sex
-     * @param specieType
      * @param speciesType
-     * @param isStirilazed
+     * @param isSterilized
      * @param birthDate
      * @param ownerId
-     * @param is_active
+     * @param isActive
      */
-    public PetDTO(int petId, String name, String coat_color, SexEnum sex, SpecieEnum specieType, String speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId, boolean is_active) {
+    public PetDTO(int petId, String name, String coatColor, SexEnum sex, SpecieEnum speciesType, boolean isSterilized, LocalDate birthDate, int ownerId, boolean isActive) {
         this.petId = petId;
         this.name = name;
-        this.coat_color = coat_color;
+        this.coatColor = coatColor;
         this.sex = sex;
-        this.specieType = specieType;
         this.speciesType = speciesType;
-        this.isStirilazed = isStirilazed;
+        this.isSterilized = isSterilized;
         this.birthDate = birthDate;
         this.ownerId = ownerId;
-        this.is_active = is_active;
+        this.isActive = isActive;
     }
 
     // Metodo abstracto para polimorfismo que define la especie
@@ -127,12 +120,12 @@ public abstract class PetDTO {
         this.name = name;
     }
 
-    public String getCoat_color() {
-        return coat_color;
+    public String getCoatColor() {
+        return coatColor;
     }
 
-    public void setCoat_color(String coat_color) {
-        this.coat_color = coat_color;
+    public void setCoatColor(String coatColor) {
+        this.coatColor = coatColor;
     }
 
     public SexEnum getSex() {
@@ -143,28 +136,20 @@ public abstract class PetDTO {
         this.sex = sex;
     }
 
-    public SpecieEnum getSpecieType() {
-        return specieType;
-    }
-
-    public void setSpecieType(SpecieEnum specieType) {
-        this.specieType = specieType;
-    }
-
-    public String getSpeciesType() {
+    public SpecieEnum getSpeciesType() {
         return speciesType;
     }
 
-    public void setSpeciesType(String speciesType) {
+    public void setSpeciesType(SpecieEnum speciesType) {
         this.speciesType = speciesType;
     }
 
-    public boolean isIsStirilazed() {
-        return isStirilazed;
+    public boolean getIsSterilized() {
+        return isSterilized;
     }
 
-    public void setIsStirilazed(boolean isStirilazed) {
-        this.isStirilazed = isStirilazed;
+    public void setIsSterilized(boolean isSterilized) {
+        this.isSterilized = isSterilized;
     }
 
     public LocalDate getBirthDate() {
@@ -183,12 +168,27 @@ public abstract class PetDTO {
         this.ownerId = ownerId;
     }
 
-    public boolean isIs_active() {
-        return is_active;
+    public boolean isIsActive() {
+        return isActive;
     }
 
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("petId=").append(petId);
+        sb.append(", name=").append(name);
+        sb.append(", coatColor=").append(coatColor);
+        sb.append(", sex=").append(sex);
+        sb.append(", speciesType=").append(speciesType);
+        sb.append(", isSterilized=").append(isSterilized);
+        sb.append(", birthDate=").append(birthDate);
+        sb.append(", ownerId=").append(ownerId);
+        sb.append(", isActive=").append(isActive);
+        return sb.toString();
     }
 
 }

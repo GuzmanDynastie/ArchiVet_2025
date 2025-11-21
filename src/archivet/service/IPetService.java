@@ -1,7 +1,6 @@
 package archivet.service;
 
 import archivet.model.PetDTO;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -11,21 +10,21 @@ import java.util.List;
 public interface IPetService {
 
     // Guarda una nueva mascota en la base de datos.
-    boolean save(PetDTO pet) throws SQLException;
-
-    // Busca una mascota por su ID.
-    PetDTO findById(int id) throws SQLException;
-
-    // Busca todas las mascotas asociadas a un dueño específico.
-    List<PetDTO> findByOwnerId(int ownerId) throws SQLException;
+    boolean registerPet(PetDTO pet) throws Exception;
 
     // Modifica los datos de una mascota existente.
-    boolean update(PetDTO pet) throws SQLException;
+    boolean updatePet(PetDTO pet) throws Exception;
 
     // Elimina logicamente una mascota y todos sus registros asociados.
-    boolean softDelete(int id) throws SQLException;
+    boolean deactivatePet(int petId) throws Exception;
 
     // Obtiene una lista de todas las mascotas registradas en el sistema.
-    List<PetDTO> findAll() throws SQLException;
-    
+    List<PetDTO> getAllPets() throws Exception;
+
+    // Busca una mascota por su ID.
+    PetDTO getPetById(int petId) throws Exception;
+
+    // Busca todas las mascotas asociadas a un dueño específico.
+    List<PetDTO> getPetsByOwnerId(int ownerId) throws Exception;
+
 }
