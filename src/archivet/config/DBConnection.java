@@ -14,8 +14,13 @@ public class DBConnection {
     private static final String PORT = "3306";
     private static final String NAME_DB = "archivet_db";
     private static final String URL = "jdbc:mysql://" + MACHINE + ":" + PORT + "/" + NAME_DB;
+<<<<<<< Updated upstream
     private static final String USER = "";
     private static final String PASSWORD = "";
+=======
+    private static final String USER = "root";
+    private static final String PASSWORD = "50p0rt3Guzm";
+>>>>>>> Stashed changes
 
     // Objeto Connection estatico para mantener la unica conexion activa
     private static Connection connection = null;
