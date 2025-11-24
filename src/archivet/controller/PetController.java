@@ -2,10 +2,9 @@ package archivet.controller;
 
 import archivet.model.CatDTO;
 import archivet.model.DogDTO;
-import archivet.model.PetDTO;
-import archivet.model.PetDTO.SexEnum;
-import archivet.model.PetDTO.SpecieEnum;
-import archivet.service.IPetService;
+import archivet.model.interfaces.PetDTO;
+import archivet.model.interfaces.PetDTO.SexEnum;
+import archivet.service.interfaces.IPetService;
 import archivet.service.PetService;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,9 +24,9 @@ public class PetController {
     // ------------------------------------------------------------------
     // 1. REGISTRO Y ACTUALIZACIÓN
     // ------------------------------------------------------------------
-    public boolean handleDogRegistration(String name, String coatColor, SexEnum sex, SpecieEnum speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId) {
+    public boolean handleDogRegistration(String name, String coatColor, SexEnum sex, String speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId, String trainingLevel) {
         try {
-            DogDTO dog = new DogDTO(name, coatColor, sex, speciesType, isStirilazed, birthDate, ownerId);
+            DogDTO dog = new DogDTO(ownerId, name, birthDate, sex, isStirilazed, coatColor, speciesType, sex, trainingLevel);
             return petService.registerPet(dog);
         } catch (Exception e) {
             System.err.println("Error al registrar perro: " + e.getMessage());
@@ -35,9 +34,9 @@ public class PetController {
         }
     }
     
-    public boolean handleCatRegistration(String name, String coatColor, SexEnum sex, SpecieEnum speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId) {
+    public boolean handleCatRegistration(String name, String coatColor, SexEnum sex, String speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId, boolean isIndoor) {
         try {
-            CatDTO cat = new CatDTO(name, coatColor, sex, speciesType, isStirilazed, birthDate, ownerId);
+            CatDTO cat = new CatDTO(ownerId, name, birthDate, sex, isStirilazed, coatColor, speciesType, sex, isIndoor);
             return petService.registerPet(cat);
         } catch (Exception e) {
             System.err.println("Error al registrar gato: " + e.getMessage());
@@ -59,6 +58,15 @@ public class PetController {
             return petService.deactivatePet(petId);
         } catch (Exception e) {
             System.err.println("Error al desactivar mascota: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean handleActivatePet(int petId) {
+        try {
+            return petService.activatePet(petId);
+        } catch (Exception e) {
+            System.err.println("Error al activar mascota: " + e.getMessage());
             return false;
         }
     }

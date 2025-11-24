@@ -1,5 +1,6 @@
 package archivet.model;
 
+import archivet.model.interfaces.PetDTO;
 import java.time.LocalDate;
 
 /**
@@ -8,36 +9,70 @@ import java.time.LocalDate;
  */
 public class DogDTO extends PetDTO {
 
-    /**
-     * Constructor para generar un nuevo perro
-     *
-     * @param name
-     * @param coatColor
-     * @param sex
-     * @param speciesType
-     * @param isStirilazed
-     * @param birthDate
-     * @param ownerId
-     */
-    public DogDTO(String name, String coatColor, SexEnum sex, SpecieEnum speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId) {
-        super(name, coatColor, sex, speciesType, isStirilazed, birthDate, ownerId);
+    private String trainigLevel;
+
+    public enum BreedEnum {
+        MESTIZO("Criollo, Sin raza definida"),
+        CHIHUAHUA("Chihuahua"),
+        LABRADOR_RETRIEVER("Labrador retriever"),
+        POODLE("Poodle"),
+        PASTOR_ALEMAN("Pastor aleman"),
+        PITBULL_TERRIER_AMERICANO("Pitbull terrier americano"),
+        SCHNAUZER("Schnauzer"),
+        FRENCH_POODLE("French poodle"),
+        YORKSHIRE_TERRIER("Yorkshire terrier"),
+        PUG("Pug");
+
+        private final String description;
+
+        // Constructor para asignar un valor de visualizacion.
+        BreedEnum(String description) {
+            this.description = description;
+        }
+
+        // Metodo que obtendra el valor que se almacenara o momstrara.
+        public String getDescription() {
+            return description;
+        }
+
     }
 
     /**
-     * Constructor para obtener un perro de la base de datos
+     * Constructor para generar un nuevo perro.
+     *
+     * @param ownerId
+     * @param name
+     * @param birthDate
+     * @param sex
+     * @param isSterilized
+     * @param coatColor
+     * @param speciesType
+     * @param breed
+     * @param trainigLevel
+     */
+    public DogDTO(int ownerId, String name, LocalDate birthDate, SexEnum sex, boolean isSterilized, String coatColor, String speciesType, Enum breed, String trainigLevel) {
+        super(ownerId, name, birthDate, sex, isSterilized, coatColor, speciesType, breed);
+        this.trainigLevel = trainigLevel;
+    }
+
+    /**
+     * Constructor para obtener un perro de la base de datos.
      *
      * @param petId
-     * @param name
-     * @param coat_color
-     * @param sex
-     * @param speciesType
-     * @param isStirilazed
-     * @param birthDate
      * @param ownerId
+     * @param name
+     * @param birthDate
+     * @param sex
+     * @param isSterilized
+     * @param coatColor
+     * @param speciesType
+     * @param breed
      * @param isActive
+     * @param trainigLevel
      */
-    public DogDTO(int petId, String name, String coat_color, SexEnum sex, SpecieEnum speciesType, boolean isStirilazed, LocalDate birthDate, int ownerId, boolean isActive) {
-        super(petId, name, coat_color, sex, speciesType, isStirilazed, birthDate, ownerId, isActive);
+    public DogDTO(int petId, int ownerId, String name, LocalDate birthDate, SexEnum sex, boolean isSterilized, String coatColor, String speciesType, Enum breed, boolean isActive, String trainigLevel) {
+        super(petId, ownerId, name, birthDate, sex, isSterilized, coatColor, speciesType, breed, isActive);
+        this.trainigLevel = trainigLevel;
     }
 
     // Implementacion del metodo abstracto
@@ -46,16 +81,28 @@ public class DogDTO extends PetDTO {
         return "Dog";
     }
 
+    @Override
+    public String getDescriptionBreed(Enum breed) {
+        return ((BreedEnum) breed).getDescription();
+    }
+
     // Getters y Setters
+    public String getTrainigLevel() {
+        return trainigLevel;
+    }
+
+    public void setTrainigLevel(String trainigLevel) {
+        this.trainigLevel = trainigLevel;
+    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("DogDTO{");
         sb.append(super.toString());
+        sb.append(", trainigLevel=").append(trainigLevel);
         sb.append('}');
         return sb.toString();
     }
-    
-    
+
 }

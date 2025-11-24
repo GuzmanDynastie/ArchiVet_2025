@@ -1,4 +1,4 @@
-package archivet.service;
+package archivet.service.interfaces;
 
 import archivet.model.AppointmentDTO;
 import java.sql.SQLException;

@@ -1,7 +1,7 @@
-package archivet.service;
+package archivet.service.interfaces;
 
 import archivet.model.OwnerDTO;
-import archivet.model.UserDTO;
+import archivet.model.interfaces.UserDTO;
 import archivet.model.VetDoctorDTO;
 import java.util.List;
 
@@ -19,6 +19,9 @@ public interface IUserService {
     
     // Realiza la ELIMINACION LOGICA (Soft Delete) de un usuario.
     boolean deactivateUser(int userId) throws Exception;
+    
+    // Realiza la ACTIVACION LOGICA (Activate) de un usuario.
+    boolean activateUser(int userId) throws Exception;
 
     // Busca un usuario (Owner o Doctor) por su ID primario.
     UserDTO getUserById(int userId) throws Exception;

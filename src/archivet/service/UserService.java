@@ -1,8 +1,9 @@
 package archivet.service;
 
+import archivet.service.interfaces.IUserService;
 import archivet.dao.UserDAO;
 import archivet.model.OwnerDTO;
-import archivet.model.UserDTO;
+import archivet.model.interfaces.UserDTO;
 import archivet.model.VetDoctorDTO;
 import archivet.util.PasswordUtil;
 import java.sql.SQLException;
@@ -56,6 +57,15 @@ public class UserService implements IUserService {
             return userDAO.delete(userId);
         } catch (SQLException e) {
             throw new Exception("Error al desactivar el usuario.", e);
+        }
+    }
+    
+    @Override
+    public boolean activateUser(int userId) throws Exception {
+        try {
+            return userDAO.activate(userId);
+        } catch (SQLException e) {
+            throw new Exception("Error al activar el usuario.", e);
         }
     }
 

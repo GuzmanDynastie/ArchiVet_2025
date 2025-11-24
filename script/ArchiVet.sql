@@ -1,5 +1,5 @@
 -- ===============================================
--- 1. SETUP INICIAL Y TABLAS DE LOOKUP (ENUMS)
+-- 1. SETUP INICIAL
 -- ===============================================
 
 -- Crear la base de datos si no existe
@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS pet (
     is_sterilized BOOLEAN,
     coat_color VARCHAR(50),
     species_type VARCHAR(20) NOT NULL,
+    breed VARCHAR(100),
     is_active BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (owner_id) REFERENCES owner(user_id) ON DELETE RESTRICT
 );
@@ -60,7 +61,6 @@ CREATE TABLE IF NOT EXISTS pet (
 -- Subclase DOG (hereda pet_id como PK/FK)
 CREATE TABLE IF NOT EXISTS dog (
     pet_id INT PRIMARY KEY,
-    breed VARCHAR(100),
     training_level VARCHAR(50),
     FOREIGN KEY (pet_id) REFERENCES pet(pet_id) ON DELETE CASCADE
 );
@@ -69,7 +69,6 @@ CREATE TABLE IF NOT EXISTS dog (
 CREATE TABLE IF NOT EXISTS cat (
     pet_id INT PRIMARY KEY,
     is_indoor BOOLEAN,
-    preferred_diet VARCHAR(100),
     FOREIGN KEY (pet_id) REFERENCES pet(pet_id) ON DELETE CASCADE
 );
 

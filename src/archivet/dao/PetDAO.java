@@ -1,9 +1,10 @@
 package archivet.dao;
 
+import archivet.dao.interfaces.IPetDAO;
 import archivet.config.DBConnection;
 import archivet.model.CatDTO;
 import archivet.model.DogDTO;
-import archivet.model.PetDTO;
+import archivet.model.interfaces.PetDTO;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,10 +41,14 @@ public class PetDAO implements IPetDAO {
         ON p.pet_id = d.pet_id """;
 
     private static final String FIND_PET_JOIN_QUERY = """
-        SELECT p.*, o.*                                             
+        SELECT p.*, o.*, c.*, d.*                                             
         FROM pet AS p                                              
         LEFT JOIN owner AS o                                              
-        ON p.owner_id = o.user_id """;
+        ON p.owner_id = o.user_id 
+        LEFT JOIN cat AS c                                              
+        ON p.pet_id = c.pet_id
+        LEFT JOIN dog AS d                                              
+        ON p.pet_id = d.pet_id """;
 
     private static final String FIND_BY_ID_FULL_SQL = FIND_PET_JOIN_QUERY + " WHERE p.pet_id = ?";
 
@@ -52,24 +57,25 @@ public class PetDAO implements IPetDAO {
     // --- Inserts
     private static final String INSERT_PET_SQL = """
         INSERT INTO                                         
-        pet (owner_id, name, birth_date, sex, is_sterilized, coat_color, species_type)                                         
-        VALUES (?, ?, ?, ?, ?, ?, ?); """;
+        pet (owner_id, name, birth_date, sex, is_sterilized, coat_color, species_type. breed)                                         
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?); """;
 
-    private static final String INSERT_DOG_SQL = "INSERT INTO dog (pet_id) VALUES (?); ";
+    private static final String INSERT_DOG_SQL = "INSERT INTO dog (pet_id, training_level) VALUES (?, ?); ";
 
-    private static final String INSERT_CAT_SQL = "INSERT INTO cat (pet_id) VALUES (?); ";
+    private static final String INSERT_CAT_SQL = "INSERT INTO cat (pet_id, is_indoor) VALUES (?, ?); ";
 
     // --- Updates
     private static final String UPDATE_PET_SQL = """
         UPDATE pet                                         
-        SET owner_id=?, name=?, birth_date=?, sex=?, is_sterilized=?, coat_color=?, species_type=?                                         
-        WHERE pet_id = ?; """;
+        SET owner_id=?, name=?, birth_date=?, sex=?, is_sterilized=?, coat_color=?, species_type=?, breed=?                                         
+        WHERE pet_id=?; """;
 
-    private static final String UPDATE_DOG_SQL = "";
-    private static final String UPDATE_CAT_SQL = "";
+    private static final String UPDATE_DOG_SQL = "UPDATE dog SET trainig_level=? WHERE pet_id=?; ";
+    private static final String UPDATE_CAT_SQL = "UPDATE cat SET is_indoor=? WHERE pet_id=?; ";
 
     // --- Soft Delete
     private static final String DEACTIVATE_PET_SQL = "UPDATE pet SET is_active = FALSE WHERE pet_id = ?; ";
+    private static final String ACTIVATE_PET_SQL = "UPDATE pet SET is_active = TRUE WHERE pet_id = ?; ";
 
     private PetDTO buildPetDTO(ResultSet rs) throws SQLException {
 
@@ -87,15 +93,28 @@ public class PetDAO implements IPetDAO {
         boolean isSterilized = rs.getBoolean("is_sterilized");
         String coatColor = rs.getString("coat_color");
         String speciesType = rs.getString("species_type").toUpperCase();
+
+        String breedString = rs.getString("breed");
+        Enum breed;
+        if ("DOG".equals(speciesType)) {
+            breed = DogDTO.BreedEnum.valueOf(breedString);
+        } else if ("CAT".equals(speciesType)) {
+            breed = CatDTO.BreedEnum.valueOf(breedString);
+        } else {
+            throw new IllegalArgumentException("Especie desconocida: " + speciesType);
+        }
+
         boolean isActive = rs.getBoolean("is_active");
 
         // 2. Decidir que subclase crear (Polimorfismo)
         if ("DOG".equals(speciesType)) {
-            DogDTO dog = new DogDTO(idPet, name, coatColor, sex, PetDTO.SpecieEnum.DOG, isSterilized, birthDate, idOwner, isActive);
+            String trainingLevel = rs.getString("training_level");
+            DogDTO dog = new DogDTO(idPet, idOwner, name, birthDate, sex, isSterilized, coatColor, speciesType, breed, isActive, trainingLevel);
             dog.setPetId(idPet);
             return dog;
         } else if ("CAT".equals(speciesType)) {
-            CatDTO cat = new CatDTO(idPet, name, coatColor, sex, PetDTO.SpecieEnum.CAT, isSterilized, birthDate, idOwner, isActive);
+            Boolean isIndoor = rs.getBoolean("is_indoor");
+            CatDTO cat = new CatDTO(idPet, idOwner, name, birthDate, sex, isSterilized, coatColor, speciesType, breed, isActive, isIndoor);
             cat.setPetId(idPet);
             return cat;
         }
@@ -119,7 +138,8 @@ public class PetDAO implements IPetDAO {
                 stmt.setString(4, pet.getSex().name());
                 stmt.setBoolean(5, pet.getIsSterilized());
                 stmt.setString(6, pet.getCoatColor());
-                stmt.setString(7, pet.getSpeciesType().name());
+                stmt.setString(7, pet.getSpeciesType());
+                stmt.setString(8, pet.getBreed().toString());
 
                 if (stmt.executeUpdate() == 0) {
                     throw new SQLException("Fallo al crear la mascota");
@@ -138,11 +158,15 @@ public class PetDAO implements IPetDAO {
             if (pet instanceof DogDTO dog) {
                 try (PreparedStatement stmt = conn.prepareStatement(INSERT_DOG_SQL)) {
                     stmt.setInt(1, dog.getPetId());
+                    stmt.setString(2, dog.getTrainigLevel());
+
                     stmt.executeUpdate();
                 }
             } else if (pet instanceof CatDTO cat) {
                 try (PreparedStatement stmt = conn.prepareStatement(INSERT_CAT_SQL)) {
                     stmt.setInt(1, cat.getPetId());
+                    stmt.setBoolean(2, cat.getIsIndoor());
+
                     stmt.executeUpdate();
                 }
             }
@@ -183,20 +207,29 @@ public class PetDAO implements IPetDAO {
                 stmt.setString(4, pet.getSex().name());
                 stmt.setBoolean(5, pet.getIsSterilized());
                 stmt.setString(6, pet.getCoatColor());
-                stmt.setString(7, pet.getSpeciesType().name());
-                stmt.setInt(8, pet.getPetId());
+                stmt.setString(7, pet.getSpeciesType());
+                stmt.setString(8, pet.getBreed().name());
+                stmt.setInt(9, pet.getPetId());
 
                 success = stmt.executeUpdate() > 0;
             }
 
             // B. Actualizar la tabla Especifica (DOG o CAT)
-//            if (pet instanceof DogDTO dog) {
-//                try (PreparedStatement stmt = conn.prepareStatement(UPDATE_DOG_SQL)) {
-//                }
-//            } else if (pet instanceof CatDTO cat) {
-//                try (PreparedStatement stmt = conn.prepareStatement(UPDATE_CAT_SQL)) {
-//                }
-//            }
+            if (pet instanceof DogDTO dog) {
+                try (PreparedStatement stmt = conn.prepareStatement(UPDATE_DOG_SQL)) {
+                    stmt.setString(1, dog.getTrainigLevel());
+                    stmt.setInt(2, dog.getPetId());
+
+                    stmt.executeUpdate();
+                }
+            } else if (pet instanceof CatDTO cat) {
+                try (PreparedStatement stmt = conn.prepareStatement(UPDATE_CAT_SQL)) {
+                    stmt.setBoolean(1, cat.getIsIndoor());
+                    stmt.setInt(2, cat.getPetId());
+
+                    stmt.executeUpdate();
+                }
+            }
             conn.commit();
             return success;
 
@@ -214,7 +247,7 @@ public class PetDAO implements IPetDAO {
     }
 
     // ------------------------------------------------------------------
-    // 3. SOFT DELETE (Actualiza isActive a FALSE) - Requiere Transacción
+    // 3. SOFT DELETE y ACTIVATE (Actualiza isActive a FALSE o vicerversa) - Requiere Transacción
     // ------------------------------------------------------------------
     @Override
     public boolean delete(int id) throws SQLException {
@@ -224,6 +257,18 @@ public class PetDAO implements IPetDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error al desactivar mascota: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean activate(int id) throws SQLException {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(ACTIVATE_PET_SQL)) {
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al activar mascota: " + e.getMessage());
             throw e;
         }
     }

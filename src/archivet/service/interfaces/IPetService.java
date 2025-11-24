@@ -1,6 +1,6 @@
-package archivet.service;
+package archivet.service.interfaces;
 
-import archivet.model.PetDTO;
+import archivet.model.interfaces.PetDTO;
 import java.util.List;
 
 /**
@@ -17,6 +17,9 @@ public interface IPetService {
 
     // Elimina logicamente una mascota y todos sus registros asociados.
     boolean deactivatePet(int petId) throws Exception;
+    
+    // Activa logicamente una mascota y todos sus registros asociados.
+    boolean activatePet(int petId) throws Exception;
 
     // Obtiene una lista de todas las mascotas registradas en el sistema.
     List<PetDTO> getAllPets() throws Exception;

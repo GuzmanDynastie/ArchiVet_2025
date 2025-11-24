@@ -1,6 +1,6 @@
-package archivet.dao;
+package archivet.dao.interfaces;
 
-import archivet.model.UserDTO;
+import archivet.model.interfaces.UserDTO;
 import archivet.model.OwnerDTO;
 import archivet.model.VetDoctorDTO;
 import java.sql.SQLException;
@@ -20,6 +20,9 @@ public interface IUserDAO {
     
     // Elimina logicamente un usuario por su ID primario. Las tablas dependientes (OWNER, VET_DOCTOR) deben ser eliminadas en cascada.
     boolean delete(int id) throws SQLException;
+    
+    // Activa logicamente un usuario por su ID primario. Las tablas dependientes (OWNER, VET_DOCTOR) deben ser eliminadas en cascada.
+    boolean activate(int id) throws SQLException;
 
     // Busca un usuario por su ID primario.
     UserDTO findById(int id) throws SQLException;

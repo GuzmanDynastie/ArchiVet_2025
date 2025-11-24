@@ -1,5 +1,6 @@
 package archivet.model;
 
+import archivet.model.interfaces.ProductDTO;
 import java.time.LocalDate;
 
 /**

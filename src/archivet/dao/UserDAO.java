@@ -1,8 +1,9 @@
 package archivet.dao;
 
+import archivet.dao.interfaces.IUserDAO;
 import archivet.config.DBConnection;
 import archivet.model.OwnerDTO;
-import archivet.model.UserDTO;
+import archivet.model.interfaces.UserDTO;
 import archivet.model.VetDoctorDTO;
 import java.sql.*;
 import java.util.ArrayList;
@@ -79,10 +80,15 @@ public class UserDAO implements IUserDAO {
         SET license_number=?, specialization=?, shift_schedule=? 
         WHERE user_id=?; """;
 
-    // --- Soft Delete
+    // --- Soft Delete y Activate
     private static final String DEACTIVATE_USER_SQL = """
         UPDATE User 
         SET is_active = FALSE 
+        WHERE user_id = ?; """;
+    
+    private static final String ACTIVATE_USER_SQL = """
+        UPDATE User 
+        SET is_active = TRUE 
         WHERE user_id = ?; """;
 
     private UserDTO buildUserDTO(ResultSet rs) throws SQLException {
@@ -248,7 +254,7 @@ public class UserDAO implements IUserDAO {
     }
 
     // ------------------------------------------------------------------
-    // 3. SOFT DELETE (Actualiza isActive a FALSE) - Requiere Transacción
+    // 3. SOFT DELETE y ACTIVATE (Actualiza isActive a FALSE o viceversa) - Requiere Transacción
     // ------------------------------------------------------------------
     @Override
     public boolean delete(int id) throws SQLException {
@@ -258,6 +264,18 @@ public class UserDAO implements IUserDAO {
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error al desactivar usuario: " + e.getMessage());
+            throw e;
+        }
+    }
+    
+    @Override
+    public boolean activate(int id) throws SQLException {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(ACTIVATE_USER_SQL)) {
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al activar usuario: " + e.getMessage());
             throw e;
         }
     }

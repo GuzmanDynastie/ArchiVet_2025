@@ -1,4 +1,4 @@
-package archivet.service;
+package archivet.service.interfaces;
 
 import archivet.model.InventoryItemDTO;
 import archivet.model.SaleDTO;

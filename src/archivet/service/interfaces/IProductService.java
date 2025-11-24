@@ -1,7 +1,7 @@
-package archivet.service;
+package archivet.service.interfaces;
 
 import archivet.model.InventoryItemDTO;
-import archivet.model.ProductDTO;
+import archivet.model.interfaces.ProductDTO;
 import archivet.model.VaccineRecordDTO;
 import java.util.List;
 import java.sql.SQLException;

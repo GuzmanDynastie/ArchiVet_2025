@@ -1,10 +1,10 @@
 package archivet.controller;
 
 import archivet.model.OwnerDTO;
-import archivet.model.UserDTO;
-import archivet.model.UserDTO.SexEnum;
+import archivet.model.interfaces.UserDTO;
+import archivet.model.interfaces.UserDTO.SexEnum;
 import archivet.model.VetDoctorDTO;
-import archivet.service.IUserService;
+import archivet.service.interfaces.IUserService;
 import archivet.service.UserService;
 import java.util.List;
 
@@ -72,6 +72,15 @@ public class UserController {
             return userService.deactivateUser(userId);
         } catch (Exception e) {
             System.err.println("Error al desactivar usuario: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean handleActivateUser(int userId) {
+        try {
+            return userService.activateUser(userId);
+        } catch (Exception e) {
+            System.err.println("Error al activar usuario: " + e.getMessage());
             return false;
         }
     }

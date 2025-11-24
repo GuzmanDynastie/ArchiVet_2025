@@ -1,7 +1,8 @@
 package archivet.service;
 
+import archivet.service.interfaces.IPetService;
 import archivet.dao.PetDAO;
-import archivet.model.PetDTO;
+import archivet.model.interfaces.PetDTO;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -42,6 +43,15 @@ public class PetService implements IPetService {
             return petDAO.delete(petId);
         } catch (SQLException e) {
             throw new Exception("Error al desactivar la mascota", e);
+        }
+    }
+    
+    @Override
+    public boolean activatePet(int petId) throws Exception {
+        try {
+            return petDAO.activate(petId);
+        } catch (SQLException e) {
+            throw new Exception("Error al activar la mascota", e);
         }
     }
 

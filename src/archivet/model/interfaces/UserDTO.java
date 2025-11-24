@@ -1,4 +1,4 @@
-package archivet.model;
+package archivet.model.interfaces;
 
 /**
  *

@@ -1,5 +1,6 @@
 package archivet.model;
 
+import archivet.model.interfaces.PetDTO;
 import java.time.LocalDate;
 
 /**
@@ -8,36 +9,67 @@ import java.time.LocalDate;
  */
 public class CatDTO extends PetDTO {
 
-    /**
-     * Constructor para generar un nuevo gato
-     *
-     * @param name
-     * @param coat_color
-     * @param sex
-     * @param speciesType
-     * @param isSterilized
-     * @param birthDate
-     * @param ownerId
-     */
-    public CatDTO(String name, String coat_color, SexEnum sex, SpecieEnum speciesType, boolean isSterilized, LocalDate birthDate, int ownerId) {
-        super(name, coat_color, sex, speciesType, isSterilized, birthDate, ownerId);
+    private Boolean isIndoor;
+
+    public enum BreedEnum {
+        MESTIZO("Criollo, Sin raza definida"),
+        BOMBAY("Bombay"),
+        AZUL_RUSO("Russian blue"),
+        SIAMES("Siames"),
+        PERSA("Persa"),
+        MAINE_COON("Maine coon"),
+        BENGALI("Bengali");
+
+        private final String description;
+
+        // Constructor para asignar un valor de visualizacion.
+        BreedEnum(String description) {
+            this.description = description;
+        }
+
+        // Metodo que obtendra el valor que se almacenara o momstrara.
+        public String getDescription() {
+            return description;
+        }
+
     }
 
     /**
-     * Constructor para obtener un gato de la base de datos
+     * Constructor para generar un nuevo gato.
+     *
+     * @param ownerId
+     * @param name
+     * @param birthDate
+     * @param sex
+     * @param isSterilized
+     * @param coatColor
+     * @param speciesType
+     * @param isIndoor
+     * @param breed
+     */
+    public CatDTO(int ownerId, String name, LocalDate birthDate, SexEnum sex, boolean isSterilized, String coatColor, String speciesType, Enum breed, Boolean isIndoor) {
+        super(ownerId, name, birthDate, sex, isSterilized, coatColor, speciesType, breed);
+        this.isIndoor = isIndoor;
+    }
+
+    /**
+     * Constructor para obtener un gato de la base de datos.
      *
      * @param petId
-     * @param name
-     * @param coat_color
-     * @param sex
-     * @param speciesType
-     * @param isSterilized
-     * @param birthDate
      * @param ownerId
+     * @param name
+     * @param birthDate
+     * @param sex
+     * @param isSterilized
+     * @param coatColor
+     * @param speciesType
+     * @param breed
      * @param isActive
+     * @param isIndoor
      */
-    public CatDTO(int petId, String name, String coat_color, SexEnum sex, SpecieEnum speciesType, boolean isSterilized, LocalDate birthDate, int ownerId, boolean isActive) {
-        super(petId, name, coat_color, sex, speciesType, isSterilized, birthDate, ownerId, isActive);
+    public CatDTO(int petId, int ownerId, String name, LocalDate birthDate, SexEnum sex, boolean isSterilized, String coatColor, String speciesType, Enum breed, boolean isActive, Boolean isIndoor) {
+        super(petId, ownerId, name, birthDate, sex, isSterilized, coatColor, speciesType, breed, isActive);
+        this.isIndoor = isIndoor;
     }
 
     // Implementacion del metodo abstracto
@@ -46,16 +78,28 @@ public class CatDTO extends PetDTO {
         return "Cat";
     }
 
+    @Override
+    public String getDescriptionBreed(Enum breed) {
+        return ((BreedEnum) breed).getDescription();
+    }
+
     // Getters y Setters
+    public Boolean getIsIndoor() {
+        return isIndoor;
+    }
+
+    public void setIsIndoor(Boolean isIndoor) {
+        this.isIndoor = isIndoor;
+    }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("CatDTO{");
         sb.append(super.toString());
+        sb.append(", isIndoor=").append(isIndoor);
         sb.append('}');
         return sb.toString();
     }
-    
-    
+
 }
