@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
-    </open-files>
->>>>>>> Stashed changes
-=======
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/guzman-dynastie/Documents/Projects/ArchiVet/ArchiVet/src/archivet/dao/interfaces/IPetDAO.java</file>
+            <file>file:/home/guzman-dynastie/Documents/Projects/ArchiVet/ArchiVet/src/archivet/service/UserService.java</file>
+            <file>file:/home/guzman-dynastie/Documents/Projects/ArchiVet/ArchiVet/src/archivet/service/PetService.java</file>
+            <file>file:/home/guzman-dynastie/Documents/Projects/ArchiVet/ArchiVet/src/archivet/service/interfaces/IUserService.java</file>
+            <file>file:/home/guzman-dynastie/Documents/Projects/ArchiVet/ArchiVet/src/archivet/ArchiVet.java</file>
         </group>
     </open-files>
->>>>>>> 27bfb8a (feat: Se agregan nuevas funciones y estructuras.)
 </project-private>
